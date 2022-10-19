@@ -1,3 +1,42 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block title %}Feed|OSAC{% endblock title %}
+
+{% block content %}
 {% for post in posts %}
 {{post.body}}
-{% endfor %}
+
+<button class="upvote-click" data-id="{{post.id}}">Upvote</button>
+<button class="downvote-click" data-id="{{post.id}}">Upvote</button>
+<strong class="vote-count-{{post.id}}">{{post.votes}}</strong>
+
+{% endfor %}<br>
+
+
+<a href= {% url 'post_create' %}>Add a post</a>
+
+<script>
+    $(document).ready(function(){
+        $('.downvote-click').click(function(){
+            var post_id = $(this).data('id');
+            $.ajax({
+                url: "{% url 'downvote' %}",
+                type: "POST",
+                data: {
+                    'post_id': post_id,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success:function(res){
+                    var _vote_count=$(".vote-count-"+post_id).text();
+                    if(res.bool==true){
+                        $(".vote-count-"+post_id).text(parseInt(_vote_count)-1);
+                    }
+                }
+            });
+
+        });
+    });    
+
+</script>
+{% endblock content %}
