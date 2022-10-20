@@ -17,7 +17,7 @@ tag_choice = (('General','General'),
 
 
 class Post(models.Model):
-    user = models.CharField(max_length=100) #until authentication is implemented, user will be a string
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     body = models.TextField()
     date = models.DateField()
     time = models.TimeField()
@@ -38,7 +38,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    user = models.CharField(max_length=100) #until authentication is implemented, user will be a string
+    user = models.ForeignKey(User, on_delete=models.CASCADE) #until authentication is implemented, user will be a string
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     body = models.TextField()
     date = models.DateField()

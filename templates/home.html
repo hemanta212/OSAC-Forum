@@ -10,11 +10,16 @@
 
 
 {% for post in posts %}
-{{post.body}}
+{{post.user}} posted <small>{{post.date}}, {{post.time}}</small><br><br>
+{{post.body}} <br><br>
+Tags:<br>
+{{post.tag0}},{{post.tag1}}<br><br>
 <div id="buttons">
+<strong class="vote-count-{{post.id}}">{% votes post %} Votes, {{post.comments}} comments</strong> <br>
 <input type="button" class="upvote-click" data-id="{{post.id}}" value="{% has_upvoted post user%}" />
-<strong class="vote-count-{{post.id}}">{% votes post %}</strong>
-<input type="button" class="downvote-click" data-id="{{post.id}}" value = "{% has_downvoted post user%}" /> <br><br><br>
+<input type="button" class="downvote-click" data-id="{{post.id}}" value = "{% has_downvoted post user%}" />  
+<input type="button" class="comment-click" data-id="{{post.id}}" value = "Comment" /> <br><br><br>
+<hr>
 </div>
 {% endfor %}<br>
 

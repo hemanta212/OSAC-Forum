@@ -21,11 +21,11 @@ class HomeView(ListView):
 class PostCreateView(CreateView):
     model = Post
     template_name = 'post_create.html'
-    fields = ['user', 'body', 'type', 'tag0', 'tag1']
+    fields = ['body', 'type', 'tag0', 'tag1']
     success_url = '/'
 
     def form_valid(self, form):
-        #form.instance.user = self.request.user
+        form.instance.user = self.request.user
         form.instance.date = date.today()
         form.instance.time = datetime.now().strftime("%H:%M:%S")
         return super().form_valid(form)
