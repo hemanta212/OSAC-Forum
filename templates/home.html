@@ -1,3 +1,93 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+{% load static %}
+{% block title %}Feed|OSAC{% endblock title %}
+
+{% block content %}
 {% for post in posts %}
 {{post.body}}
-{% endfor %}
+
+
+<input type="button" class="upvote-click" data-id="{{post.id}}" value="{% has_upvoted post user%}" />
+<input type="button" class="downvote-click" data-id="{{post.id}}" value = "{% has_downvoted post user%}" />
+
+<strong class="vote-count-{{post.id}}">{{post.votes}}</strong>
+
+{% endfor %}<br>
+
+
+<a href= {% url 'post_create' %}>Add a post</a>
+
+<script>
+    $(document).ready(function(){
+        $('.downvote-click').click(function(){
+            var post_id = $(this).data('id');            
+            $.ajax({
+                url: "{% url 'downvote' %}",
+                type: "POST",
+                data: {
+                    'post_id': post_id,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success:function(res){
+                    //have to enhance this part, so that the vote it checks if the 
+                    //user has already voted and then changes the value of the button
+                    var _vote_count=$(".vote-count-"+post_id).text();
+                    if(res.bool==true){
+                        $(".vote-count-"+post_id).text(parseInt(_vote_count)-1);
+                    }
+                }
+            });
+
+        });
+
+        $('.upvote-click').click(function(){
+            var post_id = $(this).data('id');
+            $.ajax({
+                url: "{% url 'upvote' %}",
+                type: "POST",
+                data: {
+                    'post_id': post_id,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success:function(res){
+                    var _vote_count=$(".vote-count-"+post_id).text();
+                    if(res.bool==true){
+                        $(".vote-count-"+post_id).text(parseInt(_vote_count)+1);
+                    }
+                }
+            });
+
+        });
+    });    
+
+    const btn = document.getElementsByClassName("upvote-click")[0];
+    const btn1 = document.getElementsByClassName("downvote-click")[0];
+
+    btn.addEventListener("click", ()=>{
+
+        if(btn.value === "Upvote"){
+            btn.value = "Upvoted";
+        }else{
+            btn.value= "Upvote";
+        }
+        if (btn1.value === "Downvoted"){
+            btn1.value = "Downvote";
+        }
+    })
+
+
+    btn1.addEventListener("click", ()=>{
+
+        if(btn1.value === "Downvote"){
+            btn1.value = "Downvoted";
+        }else{
+            btn1.value= "Downvote";
+        }
+        if (btn.value === "Upvoted"){
+            btn.value = "Upvote";
+        }
+    })
+
+</script>
+{% endblock content %}
