@@ -10,7 +10,19 @@ class HomeView(ListView):
     model = Post
     template_name = 'home.html'
     ordering = ['-id']
-    context_object_name= 'posts'
+
+    def has_upvoted(self, post):
+        return post.upvotes.filter(id=self.request.user.id).exists()
+    def has_downvoted(self, post):
+        return post.downvotes.filter(id=self.request.user.id).exists()
+    
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['posts'] = Post.objects.all()
+        context['has_upvoted'] = self.has_upvoted
+        context['has_downvoted'] = self.has_downvoted
+        return context
 
 class PostCreateView(CreateView):
     model = Post
@@ -25,6 +37,7 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 def upvote(request):
+    print('upvote')
     if request.method == 'POST':
         post_id = request.POST.get('post_id')
         post = get_object_or_404(Post, id=post_id)
@@ -32,6 +45,8 @@ def upvote(request):
             post.upvotes.remove(request.user)
         else:
             post.upvotes.add(request.user)
+        print(post.votes())
+        
         return JsonResponse({'bool': True})
 
 def downvote(request):
