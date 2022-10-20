@@ -1,29 +1,31 @@
 {% extends 'base.html' %}
+
 {% load custom_tags %}
 {% load static %}
+
+
 {% block title %}Feed|OSAC{% endblock title %}
 
 {% block content %}
+
+
 {% for post in posts %}
 {{post.body}}
-
-
 <input type="button" class="upvote-click" data-id="{{post.id}}" value="{% has_upvoted post user%}" />
+<strong class="vote-count-{{post.id}}">{% votes post %}</strong>
 <input type="button" class="downvote-click" data-id="{{post.id}}" value = "{% has_downvoted post user%}" />
-
-<strong class="vote-count-{{post.id}}">{{post.votes}}</strong>
-
 {% endfor %}<br>
-
 
 <a href= {% url 'post_create' %}>Add a post</a>
 
+
 <script>
+    
     $(document).ready(function(){
         $('.downvote-click').click(function(){
             var post_id = $(this).data('id');            
             $.ajax({
-                url: "{% url 'downvote' %}",
+                url: "/downvote/",
                 type: "POST",
                 data: {
                     'post_id': post_id,
@@ -44,7 +46,7 @@
         $('.upvote-click').click(function(){
             var post_id = $(this).data('id');
             $.ajax({
-                url: "{% url 'upvote' %}",
+                url: "/upvote/",
                 type: "POST",
                 data: {
                     'post_id': post_id,
@@ -89,5 +91,9 @@
         }
     })
 
+
+
 </script>
+
+
 {% endblock content %}

@@ -13,3 +13,7 @@ def has_downvoted(post, user):
     if post.downvotes.filter(id=user.id).exists():
         return "Downvoted"
     return "Downvote"
+
+@register.simple_tag
+def votes(post):
+    return post.upvotes.count() - post.downvotes.count()

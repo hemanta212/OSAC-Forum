@@ -34,8 +34,7 @@ class Post(models.Model):
         string = str(self.id)+": "+self.user
         return string
     
-    def votes(self):
-        return self.upvotes.count() - self.downvotes.count()
+
 
 
 class Comment(models.Model):
