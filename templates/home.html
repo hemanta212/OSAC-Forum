@@ -11,9 +11,11 @@
 
 {% for post in posts %}
 {{post.body}}
+<div id="buttons">
 <input type="button" class="upvote-click" data-id="{{post.id}}" value="{% has_upvoted post user%}" />
 <strong class="vote-count-{{post.id}}">{% votes post %}</strong>
-<input type="button" class="downvote-click" data-id="{{post.id}}" value = "{% has_downvoted post user%}" />
+<input type="button" class="downvote-click" data-id="{{post.id}}" value = "{% has_downvoted post user%}" /> <br><br><br>
+</div>
 {% endfor %}<br>
 
 <a href= {% url 'post_create' %}>Add a post</a>
@@ -23,7 +25,8 @@
     
     $(document).ready(function(){
         $('.downvote-click').click(function(){
-            var post_id = $(this).data('id');            
+            var post_id = $(this).data('id');  
+                      
             $.ajax({
                 url: "/downvote/",
                 type: "POST",
@@ -37,6 +40,15 @@
                     var _vote_count=$(".vote-count-"+post_id).text();
                     if(res.bool==true){
                         $(".vote-count-"+post_id).text(parseInt(_vote_count)-1);
+                        if($(".downvote-click[data-id="+post_id+"]").val()=="Downvote"){
+                            $(".downvote-click[data-id="+post_id+"]").val("Downvoted");
+                            if($(".upvote-click[data-id="+post_id+"]").val()=="Upvoted"){
+                                $(".upvote-click[data-id="+post_id+"]").val("Upvote");
+                            }
+                        }
+                        else{
+                            $(".downvote-click[data-id="+post_id+"]").val("Downvote");
+                        }
                     }
                 }
             });
@@ -56,43 +68,21 @@
                     var _vote_count=$(".vote-count-"+post_id).text();
                     if(res.bool==true){
                         $(".vote-count-"+post_id).text(parseInt(_vote_count)+1);
+                        if($(".upvote-click[data-id="+post_id+"]").val()=="Upvote"){
+                            $(".upvote-click[data-id="+post_id+"]").val("Upvoted");
+                            if($(".downvote-click[data-id="+post_id+"]").val()=="Downvoted"){
+                                $(".downvote-click[data-id="+post_id+"]").val("Downvote");
+                            }
+                        }
+                        else{
+                            $(".upvote-click[data-id="+post_id+"]").val("Upvote");
+                        }
                     }
                 }
             });
 
         });
     });    
-
-    const btn = document.getElementsByClassName("upvote-click")[0];
-    const btn1 = document.getElementsByClassName("downvote-click")[0];
-
-    btn.addEventListener("click", ()=>{
-
-        if(btn.value === "Upvote"){
-            btn.value = "Upvoted";
-        }else{
-            btn.value= "Upvote";
-        }
-        if (btn1.value === "Downvoted"){
-            btn1.value = "Downvote";
-        }
-    })
-
-
-    btn1.addEventListener("click", ()=>{
-
-        if(btn1.value === "Downvote"){
-            btn1.value = "Downvoted";
-        }else{
-            btn1.value= "Downvote";
-        }
-        if (btn.value === "Upvoted"){
-            btn.value = "Upvote";
-        }
-    })
-
-
-
 </script>
 
 
