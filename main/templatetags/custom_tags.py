@@ -17,3 +17,4 @@ def has_downvoted(post, user):
 @register.simple_tag
 def votes(post):
     return post.upvotes.count() - post.downvotes.count()
+
