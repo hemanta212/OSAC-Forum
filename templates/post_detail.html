@@ -18,10 +18,16 @@ Tags:<br>
 <input type="button" class="upvote-click upvote-click-post" data-token={{csrf_token}} data-id="{{post.id}}" value="{% has_upvoted post user%}" />
 <input type="button" class="downvote-click downvote-click-post" data-token={{csrf_token}} data-id="{{post.id}}" value = "{% has_downvoted post user%}" />  
 
-<form id="new_comment_form" %}>
-    <input type="text" name="new_comment_input" data-id="{{post.id}}" id="#id_comment" placeholder="Add a comment" value="" />
-    <button id="new_comment_btn" data-token={{csrf_token}} type="submit">Comment</button>
-</form>
+<br>
+    <input type="text" 
+           name="new_comment_input" 
+           data-id="{{post.id}}" 
+           id="id_comment" 
+           placeholder="Add a comment" 
+           value="" />
+
+    <button id="new_comment_btn" 
+            data-token={{csrf_token}}>Comment</button>
 <hr><hr>
 {% for comment in comments %}
     {{comment.user}} commented at <small>{{comment.date}}, {{comment.time}}</small><br>

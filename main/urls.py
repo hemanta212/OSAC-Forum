@@ -6,6 +6,6 @@ urlpatterns = [
     path('post_create/',views.PostCreateView.as_view(), name='post_create'),
     path('upvote/',views.upvote, name='upvote'),
     path('downvote/',views.downvote, name='downvote'),
-    path('post/create_comment/',views.create_comment, name='create_comment'),
+    path('create_comment/',views.create_comment, name='create_comment'),
     path('post/<int:pk>',views.PostDetailView.as_view(), name='detail'),
 ]

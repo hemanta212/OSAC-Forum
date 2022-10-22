@@ -38,9 +38,7 @@ class PostDetailView(DetailView):
         return context
 
 def create_comment(request):
-    print('yo chei run bhayo')
     if request.method == 'POST':
-        print('yo chei run bhayo ki nai')
         post_id = request.POST.get('post_id')
         post = get_object_or_404(Post, id=post_id)
         body = request.POST.get('body')
@@ -48,8 +46,8 @@ def create_comment(request):
         comment.save()
         post.comments += 1
         post.save()
-
         return JsonResponse({'bool': True})
+    return JsonResponse({'bool': False})
 
 def upvote(request):
     if request.method == 'POST':
