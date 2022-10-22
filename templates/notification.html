@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Notifications</h2>
+<hr>
+{% for notification in specific_notifications %}
+{{notification.body}}
+{% endfor %}
+<hr><hr>
+<h2>General Notifications</h2>
+{% for notification in notifications %}
+{{notification.body}}
+{% endfor %}
+<hr>
+
+{% endblock content %}

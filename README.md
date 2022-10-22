@@ -30,6 +30,7 @@
   <li>Group formation</li>
   <li>Multiple image in a post with seperate database table</li>
   <li>Follow/Unfollow system</li>
+  <li>Notification</li>
 </ul>
 
 Refer to Contributing.md for technical notes.
