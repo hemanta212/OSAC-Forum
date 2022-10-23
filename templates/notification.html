@@ -11,6 +11,10 @@
 <h2>General Notifications</h2>
 {% for notification in notifications %}
 {{notification.body}}
+{% comment %} Mark as read {% endcomment %}
+<a href="{% url 'notifications:mark_as_read' notification.id %}">Mark as read</a>
+
+
 {% endfor %}
 <hr>
 

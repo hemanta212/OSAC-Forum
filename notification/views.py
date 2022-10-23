@@ -24,8 +24,9 @@ def create_comment_notification(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     post = get_object_or_404(Post, id=comment.post.id)
     by = request.user
+    to = post.user
     body =  by.username+" has commented on your post"
-    Notification(by=by, to=None, body=body, date=date.today(), time=datetime.now()).save()
+    Notification(by=by, to=to, body=body, date=date.today(), time=datetime.now()).save()
 
 def upvote_comment_notification(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
