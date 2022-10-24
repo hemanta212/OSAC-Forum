@@ -4,18 +4,16 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Comment
 from datetime import datetime, date
-
+from random import randint
 # Create your views here.
 class HomeView(ListView):
     model = Post
     template_name = 'home.html'
     ordering = ['-id']
 
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['posts'] = reversed(Post.objects.all())
-        print(context['posts'])
         return context
 
 class PostCreateView(CreateView):
@@ -30,26 +28,70 @@ class PostCreateView(CreateView):
         form.instance.time = datetime.now().strftime("%H:%M:%S")
         return super().form_valid(form)
 
-def upvote(request):
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'post_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comments'] = Comment.objects.filter(post=self.object.id)
+        return context
+
+def create_comment(request):
     if request.method == 'POST':
         post_id = request.POST.get('post_id')
         post = get_object_or_404(Post, id=post_id)
-        if post.upvotes.filter(id=request.user.id).exists():
-            post.upvotes.remove(request.user)
-        else:
-            post.upvotes.add(request.user)
-        if post.downvotes.filter(id=request.user.id).exists():
-            post.downvotes.remove(request.user)     
+        body = request.POST.get('body')
+        comment = Comment(user=request.user, post=post, body=body, date=date.today(), time=datetime.now().strftime("%H:%M:%S"))
+        comment.save()
+        post.comments += 1
+        post.save()
         return JsonResponse({'bool': True})
+    return JsonResponse({'bool': False})
+
+def upvote(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('post_id')
+        type = request.POST.get('type')
+        if type == "comment":
+            comment = get_object_or_404(Comment, id=post_id)
+            if comment.upvotes.filter(id=request.user.id).exists():
+                comment.upvotes.remove(request.user)
+            else:
+                comment.upvotes.add(request.user)
+            if comment.downvotes.filter(id=request.user.id).exists():
+                comment.downvotes.remove(request.user)
+            return JsonResponse({'bool': True})
+        else:
+            post = get_object_or_404(Post, id=post_id)
+            if post.upvotes.filter(id=request.user.id).exists():
+                post.upvotes.remove(request.user)
+            else:
+                post.upvotes.add(request.user)
+            if post.downvotes.filter(id=request.user.id).exists():
+                post.downvotes.remove(request.user)
+            return JsonResponse({'bool': True})
 
 def downvote(request):
     if request.method == 'POST':
         post_id = request.POST.get('post_id')
-        post = get_object_or_404(Post, id=post_id)
-        if post.downvotes.filter(id=request.user.id).exists():
-            post.downvotes.remove(request.user)
+        type = request.POST.get('type')
+        
+        if type == "comment":
+            comment = get_object_or_404(Comment, id=post_id)
+            if comment.downvotes.filter(id=request.user.id).exists():
+                comment.downvotes.remove(request.user)
+            else:
+                comment.downvotes.add(request.user)
+            if comment.upvotes.filter(id=request.user.id).exists():
+                comment.upvotes.remove(request.user)
+            return JsonResponse({'bool': True})
         else:
-            post.downvotes.add(request.user)
-        if post.upvotes.filter(id=request.user.id).exists():
-            post.upvotes.remove(request.user)
-        return JsonResponse({'bool': True})
+            post = get_object_or_404(Post, id=post_id)
+            if post.downvotes.filter(id=request.user.id).exists():
+                post.downvotes.remove(request.user)
+            else:
+                post.downvotes.add(request.user)
+            if post.upvotes.filter(id=request.user.id).exists():
+                post.upvotes.remove(request.user)
+            return JsonResponse({'bool': True})

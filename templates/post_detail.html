@@ -1,0 +1,56 @@
+
+{% extends 'base.html' %}
+
+{% load custom_tags %}
+{% load static %}
+
+
+{% block title %}Post{% endblock title %}
+
+{% block content %}
+
+{{post.user}} posted <small>{{post.date}}, {{post.time}}</small><br><br>
+{{post.body}} <br><br>
+Tags:<br>
+{{post.tag0}},{{post.tag1}}<br><br>
+<div id="buttons">
+<strong class="vote-count-{{post.id}}">{% votes post %}</strong> Votes, {{post.comments}} comments</strong> <br>
+<input type="button" class="upvote-click upvote-click-post" data-token={{csrf_token}} data-id="{{post.id}}" value="{% has_upvoted post user%}" />
+<input type="button" class="downvote-click downvote-click-post" data-token={{csrf_token}} data-id="{{post.id}}" value = "{% has_downvoted post user%}" />  
+
+<br>
+    <input type="text" 
+           name="new_comment_input" 
+           data-id="{{post.id}}" 
+           id="id_comment" 
+           placeholder="Add a comment" 
+           value="" />
+
+    <button id="new_comment_btn" 
+            data-token={{csrf_token}}>Comment</button>
+<hr><hr>
+{% for comment in comments %}
+    {{comment.user}} commented at <small>{{comment.date}}, {{comment.time}}</small><br>
+    {{comment.body}} <br><br>
+    <strong class="comment-vote-count-{{comment.id}}">{% votes comment %}</strong> Votes</strong> <br>
+    <input type="button" 
+           class="upvote-click upvote-click-comment" 
+           data-type="comment" data-token={{csrf_token}} 
+           data-id="{{comment.id}}" 
+           value="{% has_upvoted comment user%}" />  
+
+    <input type="button" 
+           class="downvote-click downvote-click-comment" 
+           data-type="comment" data-token={{csrf_token}} 
+           data-id="{{comment.id}}" 
+           value = "{% has_downvoted comment user%}" />
+    <br><hr><br><br>
+{% endfor %}
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'voting.js' %}">
+</script>
+<script src="{% static 'comment.js' %}">
+</script>
+{% endblock script %}
