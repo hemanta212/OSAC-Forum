@@ -1,6 +1,6 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
-from notification.views import NotificationView
+
 
 urlpatterns = [
     path('',views.HomeView.as_view(), name='home'),
@@ -9,5 +9,5 @@ urlpatterns = [
     path('downvote/',views.downvote, name='downvote'),
     path('create_comment/',views.create_comment, name='create_comment'),
     path('post/<int:pk>',views.PostDetailView.as_view(), name='detail'),
-    path('notifications/',NotificationView.as_view(), name='notifications'),
+    path('notifications/', include('notification.urls')),
 ]
