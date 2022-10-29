@@ -4,7 +4,9 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Comment
 from datetime import datetime, date
-from random import randint
+
+from notification import views as notification_views
+
 # Create your views here.
 class HomeView(ListView):
     model = Post
@@ -19,13 +21,14 @@ class HomeView(ListView):
 class PostCreateView(CreateView):
     model = Post
     template_name = 'post_create.html'
-    fields = ['body', 'type', 'tag0', 'tag1']
+    fields = ['body', 'type','is_anonymous','tag0', 'tag1']
     success_url = '/'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
         form.instance.date = date.today()
         form.instance.time = datetime.now().strftime("%H:%M:%S")
+        notification_views.create_post_notification(self.request, form.instance.id)
         return super().form_valid(form)
 
 class PostDetailView(DetailView):
@@ -46,6 +49,7 @@ def create_comment(request):
         comment.save()
         post.comments += 1
         post.save()
+        notification_views.create_comment_notification(request, post_id)
         return JsonResponse({'bool': True})
     return JsonResponse({'bool': False})
 
@@ -54,6 +58,7 @@ def upvote(request):
         post_id = request.POST.get('post_id')
         type = request.POST.get('type')
         if type == "comment":
+            notification_views.upvote_comment_notification(request, post_id)
             comment = get_object_or_404(Comment, id=post_id)
             if comment.upvotes.filter(id=request.user.id).exists():
                 comment.upvotes.remove(request.user)
@@ -63,6 +68,7 @@ def upvote(request):
                 comment.downvotes.remove(request.user)
             return JsonResponse({'bool': True})
         else:
+            notification_views.upvote_post_notification(request, post_id)
             post = get_object_or_404(Post, id=post_id)
             if post.upvotes.filter(id=request.user.id).exists():
                 post.upvotes.remove(request.user)
@@ -78,6 +84,7 @@ def downvote(request):
         type = request.POST.get('type')
         
         if type == "comment":
+            notification_views.downvote_comment_notification(request, post_id)
             comment = get_object_or_404(Comment, id=post_id)
             if comment.downvotes.filter(id=request.user.id).exists():
                 comment.downvotes.remove(request.user)
@@ -87,6 +94,7 @@ def downvote(request):
                 comment.upvotes.remove(request.user)
             return JsonResponse({'bool': True})
         else:
+            notification_views.downvote_post_notification(request, post_id)
             post = get_object_or_404(Post, id=post_id)
             if post.downvotes.filter(id=request.user.id).exists():
                 post.downvotes.remove(request.user)
@@ -95,3 +103,5 @@ def downvote(request):
             if post.upvotes.filter(id=request.user.id).exists():
                 post.upvotes.remove(request.user)
             return JsonResponse({'bool': True})
+
+

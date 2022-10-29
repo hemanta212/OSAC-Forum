@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block content %}
+
+<h2>Notifications</h2>
+<hr>
+{% for notification in notifications %}
+{% comment %} font color as slight green {% endcomment %}
+<p style="color: #008000;"><a href="{% url 'detail' notification.post.id %}">{{ notification.body }}</a></p>
+<a href="{% url 'mark_as_viewed' notification.id %}">Mark as read</a>
+{% endfor %}
+{% for notification in viewed %}
+<a href="{% url 'detail' notification.notification.post.id %}">{{notification.notification.body}}</a>
+{% endfor %}
+<hr>
+
+{% endblock content %}
