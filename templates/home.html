@@ -10,7 +10,11 @@
 
 
 {% for post in posts %}
-{{post.user}} posted <small>{{post.date}}, {{post.time}}</small><br><br>
+{% if post.is_anonymous %}
+Anonymous
+{% else %}
+{{post.user}} 
+{% endif %}posted <small>{{post.date}}, {{post.time}}</small><br><br>
 {{post.body}} <br><br>
 Tags:<br>
 {{post.tag0}},{{post.tag1}}<br><br>

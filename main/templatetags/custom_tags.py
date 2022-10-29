@@ -1,4 +1,5 @@
 from django import template
+from notification.models import Notification, Viewed
 register = template.Library()
 
 
@@ -18,3 +19,13 @@ def has_downvoted(post, user):
 def votes(post):
     return post.upvotes.count() - post.downvotes.count()
 
+@register.simple_tag
+def has_viewed(notification, user):
+    if notification.viewed.filter(user=user).exists():
+        return '#00FF00'
+    return '#FFFFFF'
+
+@register.simple_tag
+def no_of_notifications(user):
+    count = Viewed.objects.filter(user=user).count()
+    return Notification.objects.filter(to=user).count() - count  

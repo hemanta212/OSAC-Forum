@@ -1,4 +1,6 @@
 {% load static %}
+{% load custom_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +11,11 @@
     <title>{% block title %}    {% endblock title %}</title>
 </head>
 <body>
-    {% comment %} login {% endcomment %}
     {% if user.is_authenticated %}
-        Hi, {{user.username}}  
+        Hi, {{user.username}} <p>          </p>
+        <a href="{% url 'home' %}">Home</a><p>          </p>
         <a href="{% url 'logout' %}">Logout</a><br><br>
+        <a href="{% url 'notification' %}">Notifications({% no_of_notifications user %})</a>
     {% else %}
         <a href="{% url 'login' %}">Login</a>
     {% endif %}
