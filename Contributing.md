@@ -9,9 +9,14 @@
  
 <h2>Contributing</h2>
 
+Fork the repo
+  ```sh
+   Click the "Fork" button on the top right corner.
+   ```
+
 Clone the repo
    ```sh
-   git clone https://github.com/OSAC/OSAC-Forum 
+   git clone https://github.com/"your-github-username"/OSAC-Forum 
    ```
 
 To run project on your PC.
@@ -22,4 +27,17 @@ To run project on your PC.
   ```sh
   pip manage.py runserver
   ```
-  
+<h3>
+Contribute on frontend without python knowledge:</h3>
+<ul>
+<li>Code a html file in your PC as you normally would. </li>
+<li> Switch to dummy_template branch by running:   
+    ```sh
+    git switch dummy_template
+    ```  
+</li>
+  <li>visit dummy_template folder and paste your code to the specified files.</li>
+ <br> <i>Add the CSS inside the <b>style</b> tag and JS inside <b>script</b> tag in the same HTML file</i>.<br>
+ Send Pull Request to the dummy_temp branch.
+</ul>
+
