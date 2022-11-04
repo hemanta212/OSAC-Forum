@@ -19,14 +19,28 @@ Clone the repo
    git clone https://github.com/"your-github-username"/OSAC-Forum 
    ```
 
-To run project on your PC.
+To run project on your PC,
+
+Install dependencies
   ```sh
   pip install -r requirements.txt
   #using virtual environment is highly recommended
   ```
+
+Initialize the database and run server
   ```sh
-  pip manage.py runserver
+  python manage.py migrate
+  python manage.py runserver
   ```
+
+Accessing Admin Dashboard
+
+Create a superuser
+  ```sh
+  python manage.py createsuperuser
+  ```
+Navigate to `http://localhost:8000/admin` for admin login.
+
 <h3>
 Contribute on frontend without python knowledge:</h3>
 <ul>
